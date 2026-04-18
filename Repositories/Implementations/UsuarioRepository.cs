@@ -1,33 +1,52 @@
-﻿using ProjetoForms.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjetoForms.Data;
+using ProjetoForms.Models;
 using ProjetoForms.Repositories.Interfaces;
 
 namespace ProjetoForms.Repositories.Implementations
 {
     public class UsuarioRepository : IUsuarioRepository
     {
-        public Task AddAsync(UsuarioModel usuario)
+        private readonly FormsDbContext _DbContext;
+
+        public UsuarioRepository(FormsDbContext dbContext)
         {
-            throw new NotImplementedException();
+            _DbContext = dbContext;
+        }   
+
+        public async Task AddAsync(UsuarioModel usuario)
+        {
+            await _DbContext.Usuario.AddAsync(usuario);
+            await _DbContext.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            UsuarioModel usuario = await GetByIdAsync(id);
+
+            _DbContext.Usuario.Remove(usuario);
+            _DbContext.SaveChanges();
         }
 
-        public Task<IEnumerable<UsuarioModel>> GetAllAsync()
+        public async Task<IEnumerable<UsuarioModel>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _DbContext.Usuario.ToListAsync();
         }
 
-        public Task<UsuarioModel> GetByIdAsync(int id)
+        public async Task<UsuarioModel> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            UsuarioModel? usuario = await _DbContext.Usuario.FirstOrDefaultAsync(usuario => usuario.Id == id);
+
+            if (usuario == null)
+                throw new KeyNotFoundException($"Usuario com o id {id} não encontrado.");
+
+            return usuario;
         }
 
-        public Task UpdateAsync(UsuarioModel usuario)
+        public async Task UpdateAsync(UsuarioModel usuario)
         {
-            throw new NotImplementedException();
+            _DbContext.Usuario.Update(usuario);
+            await _DbContext.SaveChangesAsync();
         }
     }
 }
