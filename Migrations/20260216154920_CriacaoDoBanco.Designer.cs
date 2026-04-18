@@ -11,7 +11,7 @@ using ProjetoForms.Data;
 
 namespace ProjetoForms.Migrations
 {
-    [DbContext(typeof(ProjetoFormsDbContext))]
+    [DbContext(typeof(FormsDbContext))]
     [Migration("20260216154920_CriacaoDoBanco")]
     partial class CriacaoDoBanco
     {

@@ -3,9 +3,9 @@ using ProjetoForms.Models;
 
 namespace ProjetoForms.Data
 {
-    public class ProjetoFormsDbContext : DbContext
+    public class FormsDbContext : DbContext
     {
-        public ProjetoFormsDbContext(DbContextOptions options) : base(options)
+        public FormsDbContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -19,7 +19,7 @@ namespace ProjetoForms.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjetoFormsDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(FormsDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
         }

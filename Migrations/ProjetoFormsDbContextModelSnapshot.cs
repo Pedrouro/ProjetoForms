@@ -10,7 +10,7 @@ using ProjetoForms.Data;
 
 namespace ProjetoForms.Migrations
 {
-    [DbContext(typeof(ProjetoFormsDbContext))]
+    [DbContext(typeof(FormsDbContext))]
     partial class ProjetoFormsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
