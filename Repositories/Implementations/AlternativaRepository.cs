@@ -3,7 +3,7 @@ using ProjetoForms.Repositories.Interfaces;
 
 namespace ProjetoForms.Repositories.Implementations
 {
-    public class AlternativaRepository : IAlternativaRespository
+    public class AlternativaRepository : IAlternativaRepository
     {
         public Task AddAsync(AlternativaModel alternativa)
         {

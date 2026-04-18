@@ -2,7 +2,7 @@
 
 namespace ProjetoForms.Repositories.Interfaces
 {
-    public interface IAlternativaRespository
+    public interface IAlternativaRepository
     {
             Task<AlternativaModel> GetByIdAsync(int id);
             Task<IEnumerable<AlternativaModel>> GetAllAsync();
