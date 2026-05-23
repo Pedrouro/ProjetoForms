@@ -43,6 +43,7 @@ CodeCoverage/
 .vs/
 appsettings.Development.json
 *.csproj.user
+.env
 
 # MSBuild Binary and Structured Log
 *.binlog
