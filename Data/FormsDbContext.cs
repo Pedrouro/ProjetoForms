@@ -22,6 +22,10 @@ namespace ProjetoForms.Data
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FormsDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UsuarioModel>()
+                .Property(u => u.Perfil)
+                .HasConversion<string>();
         }
 
     }
