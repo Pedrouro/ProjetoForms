@@ -9,5 +9,6 @@ namespace ProjetoForms.Repositories.Interfaces
         Task AddAsync(UsuarioModel usuario);
         Task UpdateAsync(UsuarioModel usuario);
         Task DeleteAsync(int id);
+        Task<UsuarioModel?> GetByEmailAsync(string email);
     }
 }

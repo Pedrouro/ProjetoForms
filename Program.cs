@@ -1,15 +1,83 @@
+using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using ProjetoForms.Data;
 using ProjetoForms.Repositories.Implementations;
 using ProjetoForms.Repositories.Interfaces;
 using ProjetoForms.Services.Implementations;
 using ProjetoForms.Services.Interfaces;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if(builder.Environment.IsDevelopment())
+{
+    Env.Load();
+}
+
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Minha API",
+        Version = "v1"
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Digite o token JWT no campo abaixo:"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+var jwt_key = Environment.GetEnvironmentVariable("JWT_KEY");
+
+if (string.IsNullOrWhiteSpace(jwt_key))
+    throw new Exception("JWT_JEY não encontrada.");
+
+var key = Encoding.UTF8.GetBytes(jwt_key);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+    });
+
+builder.Services.AddAuthorization();
 
 // Repositories
 
@@ -24,6 +92,7 @@ builder.Services.AddScoped<IAlternativaRepository, AlternativaRepository>();
 
 builder.Services.AddScoped<IFormularioService, FormularioService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Configuração do DbContext
 
@@ -40,8 +109,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 //app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

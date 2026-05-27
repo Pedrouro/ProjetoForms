@@ -33,14 +33,18 @@ namespace ProjetoForms.Repositories.Implementations
             return await _DbContext.Usuario.ToListAsync();
         }
 
+        public async Task<UsuarioModel?> GetByEmailAsync(string email)
+        {
+            UsuarioModel? usuario = await _DbContext.Usuario.FirstOrDefaultAsync(x => x.Email == email);
+
+            return usuario ?? null;
+        }
+
         public async Task<UsuarioModel> GetByIdAsync(int id)
         {
             UsuarioModel? usuario = await _DbContext.Usuario.FirstOrDefaultAsync(usuario => usuario.Id == id);
 
-            if (usuario == null)
-                throw new KeyNotFoundException($"Usuario com o id {id} não encontrado.");
-
-            return usuario;
+            return usuario ?? throw new KeyNotFoundException($"Usuario com o id {id} não encontrado.");
         }
 
         public async Task UpdateAsync(UsuarioModel usuario)
