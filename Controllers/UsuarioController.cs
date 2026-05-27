@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoForms.DTOs;
 using ProjetoForms.Models;
@@ -28,6 +29,7 @@ namespace ProjetoForms.Controllers
                 return BadRequest(response);
         }
 
+        [Authorize(Policy = "UserOnly")]
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetUsuario(int id)
@@ -37,6 +39,7 @@ namespace ProjetoForms.Controllers
             return Ok(user);
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsuarios()
         {
@@ -45,6 +48,7 @@ namespace ProjetoForms.Controllers
             return Ok(users);
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpDelete]
         [Route("delete")]
         public async Task<IActionResult> DeleteUsuario(int id)
@@ -54,6 +58,7 @@ namespace ProjetoForms.Controllers
             return Ok(response.Message);
         }
 
+        [Authorize(Policy = "UserOnly")]
         [HttpPut]
         [Route("update")]
         public async Task<IActionResult> UpdateUsuario([FromBody] UsuarioDTO Usuario, int id)

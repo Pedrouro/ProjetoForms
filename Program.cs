@@ -77,7 +77,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization( options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Administrador"));
+    
+    options.AddPolicy("UserOnly", policy =>
+        policy.RequireRole("Comum", "Administrador"));
+
+});
 
 // Repositories
 
