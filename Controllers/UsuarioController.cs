@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjetoForms.DTOs;
 using ProjetoForms.Models;
 using ProjetoForms.Services.Interfaces;
+using System.Security.Claims;
 
 namespace ProjetoForms.Controllers
 {
@@ -23,10 +24,7 @@ namespace ProjetoForms.Controllers
         {
             ResponseDTO response = await _UsuarioService.AddUsuario(Usuario);
 
-            if (response.Status)
-                return Ok(response);
-            else
-                return BadRequest(response);
+            return Ok(response);
         }
 
         [Authorize(Policy = "UserOnly")]

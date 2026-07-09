@@ -3,16 +3,20 @@ using ProjetoForms.Models;
 using ProjetoForms.Repositories.Interfaces;
 using ProjetoForms.Services.Interfaces;
 using BCrypt.Net;
+using System.Security.Claims;
+using ProjetoForms.Enums;
 
 namespace ProjetoForms.Services.Implementations
 {
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _UsuarioRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository)
+        public UsuarioService(IUsuarioRepository usuarioRepository, IHttpContextAccessor httpContextAccessor)
         {
             _UsuarioRepository = usuarioRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ResponseDTO> AddUsuario(UsuarioDTO usuario)
@@ -54,6 +58,9 @@ namespace ProjetoForms.Services.Implementations
 
         public async Task<UsuarioModel> GetUsuarioById(int id)
         {
+            if (!VerificarUsuario(id) && !VerificarPerfilAdmin())
+                throw new KeyNotFoundException("Objeto não encontrado.");
+
             return await _UsuarioRepository.GetByIdAsync(id);
         }
 
@@ -80,6 +87,26 @@ namespace ProjetoForms.Services.Implementations
                 Status = true,
                 Message = "Usuário atualizado com sucesso."
             };
+        }
+
+        private bool VerificarUsuario(int id)
+        {
+            var claim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim != null && int.Parse(claim.Value) == id)
+                return true;
+
+            return false;
+        }
+
+        private bool VerificarPerfilAdmin()
+        {
+            var claim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role);
+
+            if (claim != null && claim.Value == PerfilUsuario.Administrador.ToString())
+                return true;
+
+            return false;
         }
     }
 }
