@@ -60,7 +60,7 @@ builder.Services.AddSwaggerGen(options =>
 var jwt_key = Environment.GetEnvironmentVariable("JWT_KEY");
 
 if (string.IsNullOrWhiteSpace(jwt_key))
-    throw new Exception("JWT_JEY não encontrada.");
+    throw new Exception("JWT_KEY não encontrada.");
 
 var key = Encoding.UTF8.GetBytes(jwt_key);
 
@@ -111,6 +111,13 @@ builder.Services.AddDbContext<FormsDbContext>(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<FormsDbContext>();
+
+    dbContext.Database.Migrate();
+}
 
 app.UseMiddleware<ExceptionMiddleware>();
 
