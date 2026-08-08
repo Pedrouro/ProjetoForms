@@ -23,6 +23,9 @@ namespace ProjetoForms.Services.Implementations
         {
             string hash = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
 
+            if (EmailJaCadastrado(usuario.Email))
+                throw new ArgumentException("Email já cadastrado.");
+
             UsuarioModel user = new UsuarioModel
             {
                 Nome = usuario.Nome,
@@ -107,6 +110,12 @@ namespace ProjetoForms.Services.Implementations
                 return true;
 
             return false;
+        }
+
+        private bool EmailJaCadastrado(string email)
+        {
+            UsuarioModel? usuario = _UsuarioRepository.GetByEmailAsync(email).Result;
+            return usuario != null;
         }
     }
 }

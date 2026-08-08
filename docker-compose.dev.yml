@@ -1,4 +1,4 @@
-﻿services:
+services:
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -20,9 +20,10 @@
       - sql_data:/var/opt/mssql
 
   api:
-    build:
-      context: "./src/Forms.API/"
-      dockerfile: Dockerfile
+
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+
+    working_dir: /src
 
     ports:
       - "5000:8080"
@@ -37,6 +38,16 @@
       JWT_KEY: "${JWT_KEY}"
       JWT_ISSUER: "${JWT_ISSUER}"
       JWT_AUDIENCE: "${JWT_AUDIENCE}"
+
+    command: >
+      bash -c "
+        rm -rf bin obj &&
+        dotnet restore &&
+        dotnet watch --project ProjetoForms.csproj run --urls=http://0.0.0.0:8080
+      "
+
+    volumes:
+      - .:/src
 
 volumes:
   sql_data:
