@@ -7,7 +7,7 @@
   "type": "chrome",
   "request": "launch",
   "url": "http://localhost:63061",
-  "webRoot": "C:\\Users\\Pedrouro\\Desktop\\Codigos\\Projetos\\Projeto Formulario\\ProjetoForms - Copia (3)\\src\\Forms.WEB"
+  "webRoot": "C:\\Users\\Pedrouro\\Desktop\\Codigos\\Projetos\\Projeto Formulario\\Forms\\src\\Forms.WEB"
 }</LaunchJsonTarget>
   </PropertyGroup>
 </Project>
