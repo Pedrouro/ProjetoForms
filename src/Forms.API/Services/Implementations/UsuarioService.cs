@@ -4,6 +4,7 @@ using ProjetoForms.Repositories.Interfaces;
 using ProjetoForms.Services.Interfaces;
 using BCrypt.Net;
 using System.Security.Claims;
+using System.Net.Mail;
 using ProjetoForms.Enums;
 
 namespace ProjetoForms.Services.Implementations
@@ -22,6 +23,9 @@ namespace ProjetoForms.Services.Implementations
         public async Task<ResponseDTO> AddUsuario(UsuarioDTO usuario)
         {
             string hash = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
+            if (!EmailValido(usuario.Email))
+                throw new ArgumentException("Email inválido.");
 
             if (EmailJaCadastrado(usuario.Email))
                 throw new ArgumentException("Email já cadastrado.");
@@ -80,6 +84,10 @@ namespace ProjetoForms.Services.Implementations
             }
 
             usuarioAtualizado.Nome = usuario.Nome;
+
+            if (!EmailValido(usuario.Email))
+                throw new ArgumentException("Email inválido.");
+
             usuarioAtualizado.Email = usuario.Email;
             usuarioAtualizado.Perfil = usuario.Perfil;
 
@@ -110,6 +118,19 @@ namespace ProjetoForms.Services.Implementations
                 return true;
 
             return false;
+        }
+
+        private bool EmailValido(string email)
+        {
+            try
+            {
+                var endereco = new MailAddress(email);
+                return endereco.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private bool EmailJaCadastrado(string email)
