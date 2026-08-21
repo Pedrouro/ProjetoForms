@@ -1,6 +1,6 @@
-﻿using ProjetoForms.Models;
+﻿using Forms.API.Models;
 
-namespace ProjetoForms.Repositories.Interfaces
+namespace Forms.API.Repositories.Interfaces
 {
     public interface IUsuarioRepository
     {

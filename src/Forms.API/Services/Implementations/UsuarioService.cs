@@ -1,13 +1,13 @@
-﻿using ProjetoForms.DTOs;
-using ProjetoForms.Models;
-using ProjetoForms.Repositories.Interfaces;
-using ProjetoForms.Services.Interfaces;
-using BCrypt.Net;
+﻿using BCrypt.Net;
 using System.Security.Claims;
 using System.Net.Mail;
-using ProjetoForms.Enums;
+using Forms.API.Enums;
+using Forms.API.DTOs;
+using Forms.API.Models;
+using Forms.API.Repositories.Interfaces;
+using Forms.API.Services.Interfaces;
 
-namespace ProjetoForms.Services.Implementations
+namespace Forms.API.Services.Implementations
 {
     public class UsuarioService : IUsuarioService
     {
@@ -120,7 +120,7 @@ namespace ProjetoForms.Services.Implementations
             return false;
         }
 
-        private bool EmailValido(string email)
+        private static bool EmailValido(string email)
         {
             try
             {

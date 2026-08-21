@@ -1,4 +1,4 @@
-﻿namespace ProjetoForms.Models
+﻿namespace Forms.API.Models
 {
     public class FormularioModel
     {

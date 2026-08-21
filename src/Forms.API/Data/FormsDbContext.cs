@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjetoForms.Models;
+﻿using Forms.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProjetoForms.Data
 {

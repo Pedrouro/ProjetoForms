@@ -1,14 +1,14 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using ProjetoForms.DTOs;
-using ProjetoForms.Models;
-using ProjetoForms.Repositories.Interfaces;
-using ProjetoForms.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BCrypt.Net;
+using Forms.API.Models;
+using Forms.API.DTOs;
+using Forms.API.Repositories.Interfaces;
+using Forms.API.Services.Interfaces;
 
-namespace ProjetoForms.Services.Implementations
+namespace Forms.API.Services.Implementations
 {
     public class AuthService : IAuthService
     {

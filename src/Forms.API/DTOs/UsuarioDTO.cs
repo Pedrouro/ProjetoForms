@@ -1,6 +1,6 @@
-﻿using ProjetoForms.Enums;
+﻿using Forms.API.Enums;
 
-namespace ProjetoForms.DTOs
+namespace Forms.API.DTOs
 {
     public class UsuarioDTO
     {

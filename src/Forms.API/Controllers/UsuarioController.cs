@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Forms.API.DTOs;
+using Forms.API.Models;
+using Forms.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProjetoForms.DTOs;
-using ProjetoForms.Models;
-using ProjetoForms.Services.Interfaces;
 using System.Security.Claims;
 
-namespace ProjetoForms.Controllers
+namespace Forms.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,7 +1,7 @@
-﻿using ProjetoForms.DTOs;
-using ProjetoForms.Models;
+﻿using Forms.API.DTOs;
+using Forms.API.Models;
 
-namespace ProjetoForms.Services.Interfaces
+namespace Forms.API.Services.Interfaces
 {
     public interface IAuthService
     {

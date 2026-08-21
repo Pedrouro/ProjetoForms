@@ -1,4 +1,4 @@
-﻿namespace ProjetoForms.DTOs
+﻿namespace Forms.API.DTOs
 {
     public class ResponseDTO
     {

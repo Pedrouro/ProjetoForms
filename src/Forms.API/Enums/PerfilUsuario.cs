@@ -1,4 +1,4 @@
-﻿namespace ProjetoForms.Enums
+﻿namespace Forms.API.Enums
 {
     public enum PerfilUsuario
     {

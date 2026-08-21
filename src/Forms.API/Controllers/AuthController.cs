@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Forms.API.DTOs;
+using Forms.API.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProjetoForms.DTOs;
-using ProjetoForms.Services.Interfaces;
 
-namespace ProjetoForms.Controllers
+namespace Forms.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

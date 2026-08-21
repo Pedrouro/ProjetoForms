@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Forms.API.Models;
+using Forms.API.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using ProjetoForms.Data;
-using ProjetoForms.Models;
-using ProjetoForms.Repositories.Interfaces;
 
-namespace ProjetoForms.Repositories.Implementations
+namespace Forms.API.Repositories.Implementations
 {
     public class FormularioRepository : IFormularioRepository
     {

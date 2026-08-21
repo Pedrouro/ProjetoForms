@@ -1,14 +1,14 @@
 using DotNetEnv;
+using Forms.API.Repositories.Implementations;
+using Forms.API.Repositories.Interfaces;
+using Forms.API.Services.Implementations;
+using Forms.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProjetoForms.Data;
-using ProjetoForms.Repositories.Implementations;
-using ProjetoForms.Repositories.Interfaces;
-using ProjetoForms.Services.Implementations;
-using ProjetoForms.Services.Interfaces;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

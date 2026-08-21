@@ -1,7 +1,7 @@
-﻿using ProjetoForms.Models;
-using ProjetoForms.Repositories.Interfaces;
+﻿using Forms.API.Models;
+using Forms.API.Repositories.Interfaces;
 
-namespace ProjetoForms.Repositories.Implementations
+namespace Forms.API.Repositories.Implementations
 {
     public class EnvioRepository : IEnvioRepository
     {
