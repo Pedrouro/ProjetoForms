@@ -1,4 +1,5 @@
 using DotNetEnv;
+using Forms.API.Data;
 using Forms.API.Repositories.Implementations;
 using Forms.API.Repositories.Interfaces;
 using Forms.API.Services.Implementations;
@@ -8,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ProjetoForms.Data;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -102,6 +102,7 @@ builder.Services.AddScoped<IAlternativaRepository, AlternativaRepository>();
 builder.Services.AddScoped<IFormularioService, FormularioService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 // Configuração do DbContext
 
@@ -126,7 +127,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 //app.UseHttpsRedirection();
 
