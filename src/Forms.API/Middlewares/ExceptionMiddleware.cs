@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Forms.API.Exceptions;
+using System.Net;
 using System.Text.Json;
 
 public class ExceptionMiddleware
@@ -37,8 +38,9 @@ public class ExceptionMiddleware
         var statusCode = exception switch
         {
             ArgumentException => 400,
-            KeyNotFoundException => 404,
             UnauthorizedAccessException => 401,
+            ForbiddenException => 403,
+            KeyNotFoundException => 404,
             _ => 500
         };
 
