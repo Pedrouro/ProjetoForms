@@ -1,7 +1,7 @@
 ﻿using Forms.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ProjetoForms.Data
+namespace Forms.API.Data
 {
     public class FormsDbContext : DbContext
     {
