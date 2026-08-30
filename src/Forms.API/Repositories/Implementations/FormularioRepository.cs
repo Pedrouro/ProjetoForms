@@ -1,55 +1,50 @@
-﻿using Forms.API.Models;
+﻿using Forms.API.Data;
+using Forms.API.Models;
 using Forms.API.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using ProjetoForms.Data;
 
 namespace Forms.API.Repositories.Implementations
 {
     public class FormularioRepository : IFormularioRepository
     {
-        private readonly FormsDbContext _DbContext;
+        private readonly FormsDbContext _dbContext;
+
         public FormularioRepository(FormsDbContext dbContext)
         {
-            _DbContext = dbContext;
+            _dbContext = dbContext;
         }
 
-        public async Task AddAsync(FormularioModel formulario)
+        public async Task<FormularioModel> AddAsync(FormularioModel formulario)
         {
-            await _DbContext.Formulario.AddAsync(formulario);
-            await _DbContext.SaveChangesAsync();
+            await _dbContext.Formulario.AddAsync(formulario);
+            await _dbContext.SaveChangesAsync();
+            return formulario;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<FormularioModel?> GetByIdAsync(int id)
         {
-            FormularioModel formulario = await GetByIdAsync(id);
-
-            if (formulario == null)
-                throw new InvalidOperationException();
-
-            _DbContext.Formulario.Remove(formulario);
-            await _DbContext.SaveChangesAsync();
+            return await _dbContext.Formulario
+                .Include(f => f.Criador)
+                .FirstOrDefaultAsync(f => f.Id == id);
         }
 
         public async Task<IEnumerable<FormularioModel>> GetAllAsync()
         {
-            return await _DbContext.Formulario.ToListAsync();
-            
-        }
-
-        public async Task<FormularioModel> GetByIdAsync(int id)
-        {
-            FormularioModel? formulario = await _DbContext.Formulario.FirstOrDefaultAsync(form => form.Id == id);
-
-            if (formulario == null)
-                throw new KeyNotFoundException($"Formulario com o id {id} não encontrado.");
-            
-            return formulario;
+            return await _dbContext.Formulario
+                //.Include(f => f.Criador)
+                .ToListAsync();
         }
 
         public async Task UpdateAsync(FormularioModel formulario)
         {
-            _DbContext.Formulario.Update(formulario);
-            await _DbContext.SaveChangesAsync();
+            _dbContext.Formulario.Update(formulario);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(FormularioModel formulario)
+        {
+            _dbContext.Formulario.Remove(formulario);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

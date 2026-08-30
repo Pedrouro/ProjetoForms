@@ -1,17 +1,17 @@
 ﻿using Forms.API.Enums;
 
-namespace Forms.API.Models
+namespace Forms.API.DTOs
 {
-    public class FormularioModel
+    public class FormularioResponseDTO
     {
         public int Id { get; set; }
         public required string Titulo { get; set; }
         public string? Descricao { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
-        public StatusFormulario Status { get; set; } = StatusFormulario.Rascunho;
+        public StatusFormulario Status { get; set; }
 
-        public int CriadorId { get; set; }
-        public required UsuarioModel Criador { get; set; }
+        //public int CriadorId { get; set; }
+        //public required string CriadorNome { get; set; }
     }
 }

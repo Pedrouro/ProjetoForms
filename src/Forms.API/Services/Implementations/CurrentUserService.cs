@@ -1,4 +1,5 @@
-﻿using Forms.API.Services.Interfaces;
+﻿using Forms.API.Enums;
+using Forms.API.Services.Interfaces;
 using System.Security.Claims;
 
 namespace Forms.API.Services.Implementations
@@ -20,6 +21,19 @@ namespace Forms.API.Services.Implementations
             if (userId == null)
                 throw new UnauthorizedAccessException("Necessário realizar o login para continuar.");
             return int.Parse(userId!);
+        }
+
+        public PerfilUsuario GetCurrentUserPerfil()
+        {
+            var userRole = _httpContextAccessor.HttpContext?
+                .User
+                .FindFirst(ClaimTypes.Role)?
+                .Value;
+
+            if (userRole == null)
+                throw new UnauthorizedAccessException("Necessário realizar o login para continuar.");
+
+            return Enum.Parse<PerfilUsuario>(userRole);
         }
     }
 }

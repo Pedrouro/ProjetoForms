@@ -1,76 +1,104 @@
 ﻿using Forms.API.DTOs;
+using Forms.API.Enums;
+using Forms.API.Exceptions;
+using Forms.API.Mappers;
 using Forms.API.Models;
 using Forms.API.Repositories.Interfaces;
 using Forms.API.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Forms.API.Services.Implementations
 {
     public class FormularioService : IFormularioService
     {
-        
-        private readonly IUsuarioRepository _UsuarioRepository;
-        private readonly IFormularioRepository _FormularioRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IFormularioRepository _formularioRepository;
+        private readonly ICurrentUserService _currentUserService;
 
-        public FormularioService(IUsuarioRepository usuarioRepository, IFormularioRepository formularioRepository)
+        public FormularioService(
+            IUsuarioRepository usuarioRepository,
+            IFormularioRepository formularioRepository,
+            ICurrentUserService currentUserService)
         {
-            _UsuarioRepository = usuarioRepository;
-            _FormularioRepository = formularioRepository;
+            _usuarioRepository = usuarioRepository;
+            _formularioRepository = formularioRepository;
+            _currentUserService = currentUserService;
         }
 
-        public async Task<ResponseDTO> AddFormulario(FormularioDTO formulario)
+        public async Task<ResponseDTO<FormularioResponseDTO>> AddFormularioAsync(CreateFormularioDTO dto)
         {
-            UsuarioModel usuario = await _UsuarioRepository.GetByIdAsync(1); // Apenas para testes. Alterar futuramente para pegar o usuário logado
+            int usuarioId = _currentUserService.GetCurrentUserId();
+            UsuarioModel usuario = await _usuarioRepository.GetByIdAsync(usuarioId)
+                ?? throw new NotFoundException($"Usuário com id {usuarioId} não encontrado.");
 
-            FormularioModel form = new FormularioModel
+            FormularioModel formulario = dto.ToModel(usuario);
+            await _formularioRepository.AddAsync(formulario);
+
+            return new ResponseDTO<FormularioResponseDTO>
             {
-                Titulo = formulario.Titulo,
-                Descricao = formulario.Descricao,
-                DataCriacao = DateTime.Now,
-                Criador = usuario
-            };
-
-            await _FormularioRepository.AddAsync(form);
-
-            return new ResponseDTO { 
-                Status =  true,
-                Message = "Formulario criado com sucesso."
-            };
-        }
-
-        public async Task<ResponseDTO> DeleteFormulario(int id)
-        {
-            await _FormularioRepository.DeleteAsync(id);
-            return new ResponseDTO { 
                 Status = true,
-                Message = "Formulario deletado com sucesso." 
+                Message = "Formulário criado com sucesso.",
+                Data = formulario.ToResponseDTO()
             };
         }
 
-        public async Task<IEnumerable<FormularioModel>> GetAllFormularios()
+        public async Task<FormularioResponseDTO> GetFormularioByIdAsync(int id)
         {
-            return await _FormularioRepository.GetAllAsync();
+            FormularioModel? formulario = await _formularioRepository.GetByIdAsync(id);
+
+            if (formulario == null || !UsuarioPodeAcessar(formulario))
+                throw new NotFoundException($"Formulário com id {id} não encontrado.");
+
+            return formulario.ToResponseDTO();
         }
 
-        public async Task<FormularioModel> GetFormularioById(int id)
+        public async Task<IEnumerable<FormularioResponseDTO>> GetAllFormulariosAsync()
         {
-            return await _FormularioRepository.GetByIdAsync(id);
+            IEnumerable<FormularioModel> formularios = await _formularioRepository.GetAllAsync();
+            return formularios.Select(f => f.ToResponseDTO());
         }
 
-        public async Task<ResponseDTO> UpdateFormulario(FormularioModel formulario, int id)
+        public async Task<ResponseDTO> UpdateFormularioAsync(int id, UpdateFormularioDTO dto)
         {
-            FormularioModel formularioAtualizado = await _FormularioRepository.GetByIdAsync(id);
+            FormularioModel? formulario = await _formularioRepository.GetByIdAsync(id);
 
-            formularioAtualizado.Titulo = formulario.Titulo;
-            formularioAtualizado.Descricao = formulario.Descricao;
+            if (formulario == null || !UsuarioPodeAcessar(formulario))
+                throw new NotFoundException($"Formulário com id {id} não encontrado.");
 
-            await _FormularioRepository.UpdateAsync(formularioAtualizado);
+            formulario.ApplyUpdate(dto);
+            await _formularioRepository.UpdateAsync(formulario);
 
             return new ResponseDTO
             {
                 Status = true,
-                Message = "Formulario atualizado com sucesso."
+                Message = "Formulário atualizado com sucesso."
             };
+        }
+
+        public async Task<ResponseDTO> DeleteFormularioAsync(int id)
+        {
+            FormularioModel? formulario = await _formularioRepository.GetByIdAsync(id);
+
+            if (formulario == null || !UsuarioPodeAcessar(formulario))
+                throw new NotFoundException($"Formulário com id {id} não encontrado.");
+
+            await _formularioRepository.DeleteAsync(formulario);
+
+            return new ResponseDTO
+            {
+                Status = true,
+                Message = "Formulário deletado com sucesso."
+            };
+        }
+
+        private bool UsuarioPodeAcessar(FormularioModel formulario)
+        {
+            int currentUsuarioId = _currentUserService.GetCurrentUserId();
+            PerfilUsuario currentPerfil = _currentUserService.GetCurrentUserPerfil();
+
+            bool isDono = formulario.CriadorId == currentUsuarioId;
+            bool isAdmin = currentPerfil == PerfilUsuario.Administrador;
+
+            return isDono || isAdmin;
         }
     }
 }

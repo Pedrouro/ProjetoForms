@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ProjetoForms.Migrations
 {
     [DbContext(typeof(FormsDbContext))]
-    [Migration("20260423154538_atualizacaoUsuarioModel")]
-    partial class atualizacaoUsuarioModel
+    [Migration("20260824161320_AtualizacaoDaModelFormulario")]
+    partial class AtualizacaoDaModelFormulario
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace ProjetoForms.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ProjetoForms.Models.AlternativaModel", b =>
+            modelBuilder.Entity("Forms.API.Models.AlternativaModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +47,7 @@ namespace ProjetoForms.Migrations
                     b.ToTable("Alternativa");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.EnvioModel", b =>
+            modelBuilder.Entity("Forms.API.Models.EnvioModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +73,7 @@ namespace ProjetoForms.Migrations
                     b.ToTable("Envio");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.FormularioModel", b =>
+            modelBuilder.Entity("Forms.API.Models.FormularioModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,11 +84,17 @@ namespace ProjetoForms.Migrations
                     b.Property<int>("CriadorId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DataAtualizacao")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
@@ -101,7 +107,7 @@ namespace ProjetoForms.Migrations
                     b.ToTable("Formulario");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.PerguntaModel", b =>
+            modelBuilder.Entity("Forms.API.Models.PerguntaModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,7 +136,7 @@ namespace ProjetoForms.Migrations
                     b.ToTable("Pergunta");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.RespostaModel", b =>
+            modelBuilder.Entity("Forms.API.Models.RespostaModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,7 +167,7 @@ namespace ProjetoForms.Migrations
                     b.ToTable("Resposta");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.UsuarioModel", b =>
+            modelBuilder.Entity("Forms.API.Models.UsuarioModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -190,9 +196,9 @@ namespace ProjetoForms.Migrations
                     b.ToTable("Usuario");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.AlternativaModel", b =>
+            modelBuilder.Entity("Forms.API.Models.AlternativaModel", b =>
                 {
-                    b.HasOne("ProjetoForms.Models.PerguntaModel", "Pergunta")
+                    b.HasOne("Forms.API.Models.PerguntaModel", "Pergunta")
                         .WithMany()
                         .HasForeignKey("PerguntaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -201,15 +207,15 @@ namespace ProjetoForms.Migrations
                     b.Navigation("Pergunta");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.EnvioModel", b =>
+            modelBuilder.Entity("Forms.API.Models.EnvioModel", b =>
                 {
-                    b.HasOne("ProjetoForms.Models.FormularioModel", "Formulario")
+                    b.HasOne("Forms.API.Models.FormularioModel", "Formulario")
                         .WithMany()
                         .HasForeignKey("FormularioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProjetoForms.Models.UsuarioModel", "Usuario")
+                    b.HasOne("Forms.API.Models.UsuarioModel", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -220,9 +226,9 @@ namespace ProjetoForms.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.FormularioModel", b =>
+            modelBuilder.Entity("Forms.API.Models.FormularioModel", b =>
                 {
-                    b.HasOne("ProjetoForms.Models.UsuarioModel", "Criador")
+                    b.HasOne("Forms.API.Models.UsuarioModel", "Criador")
                         .WithMany()
                         .HasForeignKey("CriadorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -231,9 +237,9 @@ namespace ProjetoForms.Migrations
                     b.Navigation("Criador");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.PerguntaModel", b =>
+            modelBuilder.Entity("Forms.API.Models.PerguntaModel", b =>
                 {
-                    b.HasOne("ProjetoForms.Models.FormularioModel", "Formulario")
+                    b.HasOne("Forms.API.Models.FormularioModel", "Formulario")
                         .WithMany()
                         .HasForeignKey("FormularioId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -242,19 +248,19 @@ namespace ProjetoForms.Migrations
                     b.Navigation("Formulario");
                 });
 
-            modelBuilder.Entity("ProjetoForms.Models.RespostaModel", b =>
+            modelBuilder.Entity("Forms.API.Models.RespostaModel", b =>
                 {
-                    b.HasOne("ProjetoForms.Models.AlternativaModel", "AlternativaEscolhida")
+                    b.HasOne("Forms.API.Models.AlternativaModel", "AlternativaEscolhida")
                         .WithMany()
                         .HasForeignKey("AlternativaEscolhidaId");
 
-                    b.HasOne("ProjetoForms.Models.PerguntaModel", "Pergunta")
+                    b.HasOne("Forms.API.Models.PerguntaModel", "Pergunta")
                         .WithMany()
                         .HasForeignKey("PerguntaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProjetoForms.Models.EnvioModel", "envio")
+                    b.HasOne("Forms.API.Models.EnvioModel", "envio")
                         .WithMany()
                         .HasForeignKey("envioId")
                         .OnDelete(DeleteBehavior.Cascade)

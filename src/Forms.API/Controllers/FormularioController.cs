@@ -1,7 +1,6 @@
 ﻿using Forms.API.DTOs;
-using Forms.API.Models;
 using Forms.API.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forms.API.Controllers
@@ -10,46 +9,51 @@ namespace Forms.API.Controllers
     [ApiController]
     public class FormularioController : ControllerBase
     {
-        private readonly IFormularioService _FormularioService;
+        private readonly IFormularioService _formularioService;
 
         public FormularioController(IFormularioService formularioService)
         {
-            _FormularioService = formularioService;
+            _formularioService = formularioService;
         }
 
+        [Authorize(Policy = "UserOnly")]
         [HttpPost]
-        [Route("create")]
-        public async Task<IActionResult> CreateFormulario([FromBody] FormularioDTO formulario)
+        public async Task<IActionResult> CreateFormulario([FromBody] CreateFormularioDTO formulario)
         {
-            await _FormularioService.AddFormulario(formulario);
-            return Ok();
+            ResponseDTO<FormularioResponseDTO> response = await _formularioService.AddFormularioAsync(formulario);
+            return CreatedAtAction(nameof(GetFormulario), new { id = response.Data!.Id }, response);
         }
 
-        [HttpGet]
-        [Route("{id}")]
+        [Authorize(Policy = "UserOnly")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetFormulario(int id)
         {
-            throw new NotImplementedException();
+            FormularioResponseDTO formulario = await _formularioService.GetFormularioByIdAsync(id);
+            return Ok(formulario);
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet]
-        public async Task<IEnumerable<UsuarioModel>> GetAllFormularios()
+        public async Task<IActionResult> GetAllFormularios()
         {
-            throw new NotImplementedException();
+            IEnumerable<FormularioResponseDTO> formularios = await _formularioService.GetAllFormulariosAsync();
+            return Ok(formularios);
         }
 
-        [HttpDelete]
-        [Route("delete")]
+        [Authorize(Policy = "UserOnly")]
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateFormulario(int id, [FromBody] UpdateFormularioDTO formulario)
+        {
+            ResponseDTO response = await _formularioService.UpdateFormularioAsync(id, formulario);
+            return Ok(response);
+        }
+        
+        [Authorize(Policy = "UserOnly")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteFormulario(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        [HttpPut]
-        [Route("update")]
-        public async Task<IActionResult> UpdateFormulario([FromBody] FormularioModel formulario)
-        {
-            throw new NotImplementedException();
+            ResponseDTO response = await _formularioService.DeleteFormularioAsync(id);
+            return Ok(response);
         }
     }
 }
