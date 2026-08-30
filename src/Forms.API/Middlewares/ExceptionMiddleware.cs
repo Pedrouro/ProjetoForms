@@ -41,6 +41,7 @@ public class ExceptionMiddleware
             UnauthorizedAccessException => 401,
             ForbiddenException => 403,
             KeyNotFoundException => 404,
+            NotFoundException => 404,
             _ => 500
         };
 
