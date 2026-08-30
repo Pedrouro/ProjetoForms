@@ -19,7 +19,6 @@ namespace Forms.API.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
         public async Task<IActionResult> CreateUsuario([FromBody] UsuarioDTO Usuario)
         {
             ResponseDTO response = await _UsuarioService.AddUsuario(Usuario);
@@ -48,7 +47,7 @@ namespace Forms.API.Controllers
 
         [Authorize(Policy = "AdminOnly")]
         [HttpDelete]
-        [Route("delete")]
+        [Route("{id:int}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
             ResponseDTO response = await _UsuarioService.DeleteUsuario(id);
@@ -58,7 +57,7 @@ namespace Forms.API.Controllers
 
         [Authorize(Policy = "UserOnly")]
         [HttpPut]
-        [Route("update")]
+        [Route("{id:int}")]
         public async Task<IActionResult> UpdateUsuario([FromBody] UsuarioDTO Usuario, int id)
         {
             ResponseDTO response = await _UsuarioService.UpdateUsuario(Usuario, id);
